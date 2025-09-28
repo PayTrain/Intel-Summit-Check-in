@@ -7,6 +7,61 @@ const teamSelect = document.getElementById("teamSelect");
 let count = 0;
 const maxCount = 50;
 
+// Load counts from localStorage if available
+if (localStorage.getItem("totalCount")) {
+  count = parseInt(localStorage.getItem("totalCount"));
+}
+
+const teamCounts = {
+  water: 0,
+  zero: 0,
+  power: 0,
+};
+
+if (localStorage.getItem("teamCounts")) {
+  const saved = JSON.parse(localStorage.getItem("teamCounts"));
+  teamCounts.water = saved.water || 0;
+  teamCounts.zero = saved.zero || 0;
+  teamCounts.power = saved.power || 0;
+}
+
+// Load attendee lists from localStorage if available
+const attendeeLists = {
+  water: [],
+  zero: [],
+  power: [],
+};
+if (localStorage.getItem("attendeeLists")) {
+  const savedLists = JSON.parse(localStorage.getItem("attendeeLists"));
+  attendeeLists.water = savedLists.water || [];
+  attendeeLists.zero = savedLists.zero || [];
+  attendeeLists.power = savedLists.power || [];
+}
+
+// Set initial counts and lists in DOM
+window.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("attendeeCount").textContent = count;
+  document.getElementById("waterCount").textContent = teamCounts.water;
+  document.getElementById("zeroCount").textContent = teamCounts.zero;
+  document.getElementById("powerCount").textContent = teamCounts.power;
+
+  // Set progress bar
+  const percentage = Math.round((count / maxCount) * 100);
+  document.getElementById("progressBar").style.width = `${percentage}%`;
+
+  // Restore attendee lists
+  for (const team in attendeeLists) {
+    const list = attendeeLists[team];
+    const ul = document.getElementById(team + "List");
+    ul.innerHTML = "";
+    for (let i = 0; i < list.length; i++) {
+      const li = document.createElement("li");
+      li.textContent = list[i];
+      ul.appendChild(li);
+    }
+  }
+});
+
 // Handle form submission
 form.addEventListener("submit", function (event) {
   event.preventDefault();
@@ -18,6 +73,11 @@ form.addEventListener("submit", function (event) {
 
   // Increment count
   count++;
+  teamCounts[team]++;
+
+  // Save counts to localStorage
+  localStorage.setItem("totalCount", count);
+  localStorage.setItem("teamCounts", JSON.stringify(teamCounts));
 
   // Update attendee count on the page
   const attendeeCount = document.getElementById("attendeeCount");
@@ -30,7 +90,7 @@ form.addEventListener("submit", function (event) {
 
   // Update team counter
   const teamCounter = document.getElementById(team + "Count");
-  teamCounter.textContent = parseInt(teamCounter.textContent) + 1;
+  teamCounter.textContent = teamCounts[team];
 
   // Show welcome message on the page
   const message = `🎉 Welcome, ${name} from ${teamName}!`;
@@ -40,11 +100,14 @@ form.addEventListener("submit", function (event) {
   greeting.style.display = "block";
   greeting.classList.add("success-message");
 
-  // Add attendee to the team list
+  // Add attendee to the team list and save
   const attendeeList = document.getElementById(team + "List");
   const listItem = document.createElement("li");
-  listItem.textContent = `${name} (${teamName})`;
+  const attendeeText = `${name} (${teamName})`;
+  listItem.textContent = attendeeText;
   attendeeList.appendChild(listItem);
+  attendeeLists[team].push(attendeeText);
+  localStorage.setItem("attendeeLists", JSON.stringify(attendeeLists));
 
   // Check if goal is reached
   if (count >= maxCount) {
