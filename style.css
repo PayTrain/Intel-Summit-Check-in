@@ -336,6 +336,21 @@ select {
   background-color: #fff7ed;
 }
 
+.attendee-list {
+  margin-top: 10px;
+  padding-left: 22px;
+  font-size: 15px;
+  color: #333;
+  text-align: left;
+  max-height: 120px;
+  overflow-y: auto;
+}
+
+.attendee-list li {
+  padding: 2px 0 2px 0;
+  border-bottom: 1px solid #f1f5f9;
+}
+
 .team-name {
   font-size: 15px;
   font-weight: 500;

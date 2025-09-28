@@ -40,6 +40,12 @@ form.addEventListener("submit", function (event) {
   greeting.style.display = "block";
   greeting.classList.add("success-message");
 
+  // Add attendee to the team list
+  const attendeeList = document.getElementById(team + "List");
+  const listItem = document.createElement("li");
+  listItem.textContent = `${name} (${teamName})`;
+  attendeeList.appendChild(listItem);
+
   // Check if goal is reached
   if (count >= maxCount) {
     // Find the winning team
