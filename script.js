@@ -32,9 +32,13 @@ form.addEventListener("submit", function (event) {
   const teamCounter = document.getElementById(team + "Count");
   teamCounter.textContent = parseInt(teamCounter.textContent) + 1;
 
-  // Show welcome message
+  // Show welcome message on the page
   const message = `🎉 Welcome, ${name} from ${teamName}!`;
-  console.log(message);
+  const greeting = document.getElementById("greeting");
+
+  greeting.textContent = message;
+  greeting.style.display = "block";
+  greeting.classList.add("success-message");
 
   form.reset();
 });
