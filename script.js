@@ -40,5 +40,35 @@ form.addEventListener("submit", function (event) {
   greeting.style.display = "block";
   greeting.classList.add("success-message");
 
+  // Check if goal is reached
+  if (count >= maxCount) {
+    // Find the winning team
+    const waterCount = parseInt(
+      document.getElementById("waterCount").textContent
+    );
+    const zeroCount = parseInt(
+      document.getElementById("zeroCount").textContent
+    );
+    const powerCount = parseInt(
+      document.getElementById("powerCount").textContent
+    );
+    let winningTeam = "";
+    let winningEmoji = "";
+    let maxTeamCount = Math.max(waterCount, zeroCount, powerCount);
+    if (waterCount === maxTeamCount) {
+      winningTeam = "Team Water Wise";
+      winningEmoji = "🌊";
+    } else if (zeroCount === maxTeamCount) {
+      winningTeam = "Team Net Zero";
+      winningEmoji = "🌿";
+    } else {
+      winningTeam = "Team Renewables";
+      winningEmoji = "⚡";
+    }
+    greeting.textContent = `🏆 Celebration! ${winningEmoji} ${winningTeam} has the most check-ins!`;
+    greeting.style.display = "block";
+    greeting.classList.add("success-message");
+  }
+
   form.reset();
 });
